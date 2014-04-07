@@ -1,0 +1,15 @@
+.board {
+	display: table;
+}
+
+.board > .row {
+	display: table-row;
+}
+
+.board > .row > .cell {
+	display: table-cell;
+	width: 100px;
+	height: 100px;
+	background: pink;
+	border: 2px solid #fff;
+}
