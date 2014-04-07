@@ -1,4 +1,4 @@
-var Point, XPoint, OPoint, Board;
+var Point, XPoint, OPoint, Board, TicTacToe;
 
 /**
  * Point
@@ -46,7 +46,6 @@ OPoint.prototype = Point.prototype;
  */
 Board = function(options) {
   this.options = options;
-  this.currentTurn = 'X';
   this.board = [
     [null, null, null],
     [null, null, null],
@@ -68,25 +67,20 @@ Board.prototype.isValidMove = function(point) {
 };
 
 Board.prototype.move = function(point) {
-  var x, y;
-
   if (!this.isValidMove(point)) {
     throw 'Invalid move by "' + point.getLabel() + '" at (' + point.getX() + ',' + point.getY() + ')';
   }
 
-  x = point.getX();
-  y = point.getY();
-
-  this.board[y][x] = point;
+  this.board[point.getY()][point.getX()] = point;
 };
 
 /**
  * Renders the tic-tac-toe board in the console.
  */
 Board.prototype.drawToConsole = function() {
-  var i, j, row, point, value;
+  var output = [], row, point, value;
 
-  console.log('   +-----------+ ');
+  output.push('   +-----------+ ');
 
   for (var i in this.board) {
     row = [];
@@ -97,20 +91,59 @@ Board.prototype.drawToConsole = function() {
       row.push(value);
     }
 
-    console.log(' ' + i + ' | ' + row.join(' | ') + ' | ');
+    output.push(' ' + i + ' | ' + row.join(' | ') + ' | ');
   }
 
-  console.log('   +-----------+ ');
+  output.push('   +-----------+ ');
+
+  for (var k in output) {
+    console.log(output[k]);
+  }
 };
+
+/**
+ * TicTacToe
+ */
+TicTacToe = function(options) {
+  this.options = options;
+  this.board = new Board();
+  this.state = {
+    started: false,
+    whoseTurn: 'X'
+  };
+
+  this.start();
+};
+
+TicTacToe.DEFAULTS = {};
+
+TicTacToe.prototype.constructor = TicTacToe;
+
+TicTacToe.prototype.start = function() {
+  this.state.started = true;
+  this.board.drawToConsole();
+};
+
+TicTacToe.prototype.move = function(type, x, y) {
+  var point;
+
+  point = new Point(type, x, y);
+  this.board.move(point);
+  this.board.drawToConsole();
+};
+
 
 ////////////////
 
-var board = new Board();
+var ttt = new TicTacToe();
 
-var x0 = new XPoint(0, 0);
-var o0 = new OPoint(2, 0);
+var cells = document.getElementsByClassName('cell');
 
-board.move(x0);
-board.move(o0);
-
-board.drawToConsole();
+for (var i = 0; i < cells.length; i++) {
+  cells[i].addEventListener('click', (function(i) {
+    return function() {
+      var coords = JSON.parse(cells[i].getAttribute('data-coord'));
+      ttt.move('X', coords[0], coords[1]);
+    };
+  })(i), false); 
+}
