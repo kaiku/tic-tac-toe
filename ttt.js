@@ -1,4 +1,4 @@
-var Point, XPoint, OPoint, Board, TicTacToe;
+var Point, XPoint, OPoint, Board, Player, AI, TicTacToe;
 
 /**
  * Point
@@ -23,39 +23,39 @@ Point.prototype.getY = function() {
   return this.y;
 };
 
-/**
- * XPoint
- */
 XPoint = function(x, y) {
   Point.call(this, 'X', x, y);
 };
 
 XPoint.prototype = Point.prototype;
 
-/**
- * OPoint
- */
+XPoint.prototype.constructor = XPoint;
+
 OPoint = function(x, y) {
-  Point.call(this, 'O', x, y);
+  Point.call(this, 'O', x ,y);
 };
 
 OPoint.prototype = Point.prototype;
+
+OPoint.prototype.constructor = OPoint;
 
 /**
  * Board
  */
 Board = function(options) {
-  this.options = options;
+  this.board = null;
+  this.init();
+};
+
+Board.prototype.constructor = Board;
+
+Board.prototype.init = function() {
   this.board = [
     [null, null, null],
     [null, null, null],
     [null, null, null]
   ];
 };
-
-Board.DEFAULTS = {};
-
-Board.prototype.constructor = Board;
 
 Board.prototype.isValidMove = function(point) {
   if (!(point instanceof Point)) {
@@ -72,6 +72,10 @@ Board.prototype.move = function(point) {
   }
 
   this.board[point.getY()][point.getX()] = point;
+};
+
+Board.prototype.getBoard = function() {
+  return this.board;
 };
 
 /**
@@ -101,34 +105,63 @@ Board.prototype.drawToConsole = function() {
   }
 };
 
+Player = function() {
+};
+
+AI = function() {
+  this.board = null;
+};
+
+AI.prototype.constructor = AI;
+
+AI.prototype.setBoard = function(board) {
+  this.board = board;
+};
+
+AI.prototype.getNextMove = function() {
+
+};
+
+AI.prototype.hasThreeInARow = function() {
+  var b = this.board.getBoard();
+};
+
 /**
  * TicTacToe
  */
 TicTacToe = function(options) {
   this.options = options;
   this.board = new Board();
-  this.state = {
-    started: false,
-    whoseTurn: 'X'
-  };
+  this.started = false;
+  this.whoseTurn = 0;
+  this.players = [];
 
   this.start();
 };
 
-TicTacToe.DEFAULTS = {};
-
 TicTacToe.prototype.constructor = TicTacToe;
 
 TicTacToe.prototype.start = function() {
-  this.state.started = true;
+  this.started = true;
   this.board.drawToConsole();
 };
 
 TicTacToe.prototype.move = function(type, x, y) {
-  var point;
+  var point = type === 'X' ? new XPoint(x, y) : new OPoint(x, y);
 
-  point = new Point(type, x, y);
-  this.board.move(point);
+  try {
+    this.board.move(point);
+    this.board.drawToConsole();
+  } catch (e) {}
+};
+
+TicTacToe.prototype.reset = function() {
+  // TODO: pull these from defaults
+  this.started = false;
+  this.whoseTurn = 0;
+
+  // Redraw the board
+  this.board.init();
   this.board.drawToConsole();
 };
 
