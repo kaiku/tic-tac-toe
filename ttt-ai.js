@@ -1,4 +1,35 @@
-var AIPlayer;
+var AIPlayer, Board2;
+
+Board2 = function() {
+  this.board = null;
+  this.init();
+};
+
+Board2.DEFAULTS = {
+  board: [null, null, null, null, null, null, null, null, null]
+};
+
+Board2.prototype.constructor = Board2;
+
+/**
+ * @param {Array}
+ */
+Board2.prototype.init = function(board) {
+  this.board = board || Board2.DEFAULTS.board;
+};
+
+/**
+ * @return {Array} Array of indexes of available moves (0-8).
+ */
+Board2.prototype.getAvailableMoves = function() {
+  var indexes = [];
+  for (var i in this.board) {
+    if (this.board[i] === null) indexes.push(i);
+  }
+  return indexes;
+};
+
+// AIPlayer
 
 AIPlayer = function(board, piece) {
   this.board = board;
@@ -73,9 +104,13 @@ AIPlayer.prototype.getBoardValue = function() {
   return this.getPlayerSum(this.board, 'X') + (this.getPlayerSum(this.board, 'O') * -1);
 };
 
+AIPlayer.prototype.minimax = function(board, depth, maximizingPlayer) {
+  var moves = board.getAvailableMoves();
+};
+
 /////////////////////
 
-var myBoard = ['X', 'O', 'O', 'X', 'O', null, null, null, null];
+var myBoard = new Board2(['X', null, null, null, null, null, null, null, null]);
 
 var AI = new AIPlayer(myBoard);
 
