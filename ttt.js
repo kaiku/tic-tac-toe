@@ -1,4 +1,4 @@
-var Point, XPoint, OPoint, Board, Player, AI, TicTacToe;
+var Point, XPoint, OPoint, Board, Player, TicTacToe;
 
 /**
  * Point
@@ -106,24 +106,6 @@ Board.prototype.drawToConsole = function() {
 };
 
 Player = function() {
-};
-
-AI = function() {
-  this.board = null;
-};
-
-AI.prototype.constructor = AI;
-
-AI.prototype.setBoard = function(board) {
-  this.board = board;
-};
-
-AI.prototype.getNextMove = function() {
-
-};
-
-AI.prototype.hasThreeInARow = function() {
-  var b = this.board.getBoard();
 };
 
 /**
