@@ -60,8 +60,6 @@ Board.prototype.isWin = function(piece) {
 };
 
 /**
- * Is a draw if there are no more moves and neither player has won.
- *
  * @return {Boolean}
  */
 Board.prototype.isDraw = function() {
@@ -70,6 +68,9 @@ Board.prototype.isDraw = function() {
       !this.isWin(Board.O);
 };
 
+/**
+ * @return {Boolean}
+ */
 Board.prototype.isGameOver = function() {
   return this.getAvailableMoves().length === 0;
 };
@@ -104,7 +105,7 @@ Board.prototype.clone = function() {
 /**
  * @return {Array}
  */
-Board.prototype.getBoard = function() {
+Board.prototype.toArray = function() {
   return this.board;
 };
 

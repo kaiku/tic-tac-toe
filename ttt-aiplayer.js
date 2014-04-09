@@ -10,7 +10,7 @@ AIPlayer.prototype.constructor = AIPlayer;
 
 AIPlayer.prototype.getBoardValue = function(board) {
   var self = this,
-      boardArray = board.getBoard(), // TODO: rename getBoard() to getBoardAsArray()
+      boardArray = board.toArray(),
       getRowValue,
       sum = 0,
       row;
@@ -93,12 +93,20 @@ AIPlayer.prototype.getBoardValue = function(board) {
   return sum;
 };
 
+/**
+ * @param {Board}
+ * @param {Integer}
+ * @param {Boolean}
+ * @param {Integer}
+ * @param {Integer}
+ */
 AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
   var moves = board.getAvailableMoves(),
       potentialMoves = [],
       bestValue = maximizing ? -Infinity : Infinity,
       bestMove,
-      childBoard;
+      childBoard,
+      minimaxResult;
 
   // Return the value/move if game is in a terminal state or we're at our depth.
   if (depth === 0 || !moves.length) {
@@ -107,32 +115,34 @@ AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
 
   if (maximizing) { // This AI
     for (var i in moves) {
-      // Create a copy of the current board.
+      // Copy the current board and push a move on it.
       childBoard = board.clone();
       childBoard.move(this.piece, moves[i]);
 
-      // Create a new "child" board, move the piece, and calculate the minimax on that.
       // Returns an array of [value, move index].
-      var result = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
+      minimaxResult = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
 
-      if (result[0] > alpha) {
-        alpha = result[0];
+      if (minimaxResult[0] > alpha) { // Is the largest value yet.
+        alpha = minimaxResult[0];
         bestValue = alpha;
         bestMove = moves[i];
       }
+
       if (alpha >= beta) break;
     }
   } else { // Opponent
     for (var i in moves) {
       childBoard = board.clone();
       childBoard.move(this.opponentPiece, moves[i]);
-      var result = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
 
-      if (result[0] < beta) {
-        beta = result[0];
+      minimaxResult = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
+
+      if (minimaxResult[0] < beta) { // Is the smallest value yet.
+        beta = minimaxResult[0];
         bestValue = beta;
         bestMove = moves[i];
       }
+
       if (alpha >= beta) break;
     }
   }
@@ -140,18 +150,17 @@ AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
   return [bestValue, bestMove];
 };
 
-
 AIPlayer.prototype.move = function() {
-  var board = this.manager.board,
+  var board = this.manager.getBoard(),
       numAvailableMoves = board.getAvailableMoves().length,
       move;
 
   // Save the board.
   this.board = board;
 
-  // Pick the upper right square if this is the first move.
+ // Pick a random square if first move.
   if (numAvailableMoves === 9) {
-    move = Math.floor(Math.random() * 9);
+    move = Math.floor(Math.random() * numAvailableMoves);
   } else {
     move = this.minimax(this.board, 1, true, -Infinity, Infinity)[1];
   }
