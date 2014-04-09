@@ -2,7 +2,6 @@ var AIPlayer;
 
 AIPlayer = function() {
   Player.call(this);
-
 };
 
 $.extend(AIPlayer.prototype, Player.prototype);
@@ -12,12 +11,11 @@ AIPlayer.prototype.constructor = AIPlayer;
 AIPlayer.prototype.getBoardValue = function(board) {
   var self = this,
       boardArray = board.getBoard(), // TODO: rename getBoard() to getBoardAsArray()
-      getRowHeuristicValue,
+      getRowValue,
       sum = 0,
       row;
 
-  // Returns an array
-  getRowHeuristicValue = function(row) {
+  getRowValue = function(row) {
     var score = 0;
 
     // If first piece is ours, score is 1. If opponents, -1.
@@ -82,14 +80,14 @@ AIPlayer.prototype.getBoardValue = function(board) {
     return score;
   };
 
-  for (var i in Board.DEFAULTS.rows) {
+  for (var i in Board.ROWS) {
     row = [
-      boardArray[Board.DEFAULTS.rows[i][0]],
-      boardArray[Board.DEFAULTS.rows[i][1]],
-      boardArray[Board.DEFAULTS.rows[i][2]]
+      boardArray[Board.ROWS[i][0]],
+      boardArray[Board.ROWS[i][1]],
+      boardArray[Board.ROWS[i][2]]
     ];
     
-    sum += getRowHeuristicValue.call(this, row);
+    sum += getRowValue.call(this, row);
   }
 
   return sum;
@@ -99,15 +97,18 @@ AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
   var moves = board.getAvailableMoves(),
       potentialMoves = [],
       bestValue = maximizing ? -Infinity : Infinity,
-      bestMove;
+      bestMove,
+      childBoard;
 
+  // Return the value/move if game is in a terminal state or we're at our depth.
   if (depth === 0 || !moves.length) {
     return [this.getBoardValue(board), bestMove];
   }
 
-  if (maximizing) {
+  if (maximizing) { // This AI
     for (var i in moves) {
-      var childBoard = board.clone();
+      // Create a copy of the current board.
+      childBoard = board.clone();
       childBoard.move(this.piece, moves[i]);
 
       // Create a new "child" board, move the piece, and calculate the minimax on that.
@@ -121,13 +122,10 @@ AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
       }
       if (alpha >= beta) break;
     }
-  } else {
+  } else { // Opponent
     for (var i in moves) {
-      var childBoard = board.clone();
+      childBoard = board.clone();
       childBoard.move(this.opponentPiece, moves[i]);
-
-      // Create a new "child" board, move the piece, and calculate the minimax on that.
-      // Returns an array of [value, move index].
       var result = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
 
       if (result[0] < beta) {
@@ -144,14 +142,20 @@ AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
 
 
 AIPlayer.prototype.move = function() {
-  var numAvailableMoves = this.board.getAvailableMoves().length,
-      bound = numAvailableMoves + 1;
+  var board = this.manager.board,
+      numAvailableMoves = board.getAvailableMoves().length,
+      move;
+
+  // Save the board.
+  this.board = board;
 
   // Pick the upper right square if this is the first move.
-  if (numAvailableMoves === 9) return Math.floor(Math.random() * 9);
+  if (numAvailableMoves === 9) {
+    move = Math.floor(Math.random() * 9);
+  } else {
+    move = this.minimax(this.board, 1, true, -Infinity, Infinity)[1];
+  }
 
-  var minimaxResult = this.minimax(this.board, 4, true, -Infinity, Infinity);
-
-  return minimaxResult[1];
+  this.manager.move(move);
 };
 

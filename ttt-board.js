@@ -6,29 +6,21 @@ var Board;
  * @constructor
  */
 Board = function(board) {
-  this.board = board || Board.DEFAULTS.board;
+  this.board = board || [null, null, null, null, null, null, null, null, null];
+  this.turn  = Board.X;
 };
 
 Board.X = 'X';
+
 Board.O = 'O';
 
-Board.DEFAULTS = {
-  board: [null, null, null, null, null, null, null, null, null],
-  rows: [
+Board.ROWS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
-  ]
-};
+];
 
 Board.prototype.constructor = Board;
-
-/**
- * @param {Array}
- */
-Board.prototype.reset = function() {
-  this.board = Board.DEFAULTS.board;
-};
 
 /**
  * @return {Array} Array of indexes of available moves (0-8).
@@ -52,7 +44,7 @@ Board.prototype.getAvailableMoves = function() {
  * @return {Boolean}
  */
 Board.prototype.isWin = function(piece) {
-  var rows = Board.DEFAULTS.rows;
+  var rows = Board.ROWS;
 
   for (var i in rows) {
     if (
