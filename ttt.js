@@ -1,77 +1,44 @@
-var Point, XPoint, OPoint, Board, Player, TicTacToe;
+var Board, Player, TicTacToe;
 
-/**
- * Point
- */
-Point = function(label, x, y) {
-  this.label = label;
-  this.x = x;
-  this.y = y;
+Board = function(board) {
+  this.board = board || Board.DEFAULTS.board;
 };
 
-Point.prototype.constructor = Point;
-
-Point.prototype.getLabel = function() {
-  return this.label;
-};
-
-Point.prototype.getX = function() {
-  return this.x;
-};
-
-Point.prototype.getY = function() {
-  return this.y;
-};
-
-XPoint = function(x, y) {
-  Point.call(this, 'X', x, y);
-};
-
-XPoint.prototype = Point.prototype;
-
-XPoint.prototype.constructor = XPoint;
-
-OPoint = function(x, y) {
-  Point.call(this, 'O', x ,y);
-};
-
-OPoint.prototype = Point.prototype;
-
-OPoint.prototype.constructor = OPoint;
-
-/**
- * Board
- */
-Board = function(options) {
-  this.board = null;
-  this.init();
+Board.DEFAULTS = {
+  board: [null, null, null, null, null, null, null, null, null]
 };
 
 Board.prototype.constructor = Board;
 
-Board.prototype.init = function() {
-  this.board = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null]
-  ];
+/**
+ * @param {Array}
+ */
+Board.prototype.reset = function() {
+  this.board = Board.DEFAULTS.board;
+};
+
+/**
+ * @return {Array} Array of indexes of available moves (0-8).
+ */
+Board.prototype.getAvailableMoves = function() {
+  var indexes = [];
+  for (var i in this.board) {
+    if (this.board[i] === null) indexes.push(i);
+  }
+  return indexes;
 };
 
 Board.prototype.isValidMove = function(point) {
-  if (!(point instanceof Point)) {
-    throw 'Param must be a valid point.';
-  }
-
   // Move is valid if no move has been made in that box yet.
-  return this.board[point.getY()][point.getX()] === null;
+  return this.board[point] === null;
 };
 
-Board.prototype.move = function(point) {
+Board.prototype.move = function(piece, point) {
   if (!this.isValidMove(point)) {
-    throw 'Invalid move by "' + point.getLabel() + '" at (' + point.getX() + ',' + point.getY() + ')';
+    throw 'Invalid move';
   }
 
-  this.board[point.getY()][point.getX()] = point;
+  this.board[point] = piece;
 };
 
 Board.prototype.getBoard = function() {
@@ -82,18 +49,14 @@ Board.prototype.getBoard = function() {
  * Renders the tic-tac-toe board in the console.
  */
 Board.prototype.drawToConsole = function() {
-  var output = [], row, point, value;
+  var output = [], row;
 
   output.push('   +-----------+ ');
 
-  for (var i in this.board) {
-    row = [];
-
-    for (var j in this.board[i]) {
-      point = this.board[i][j];
-      value = point && point.getLabel() || ' ' ;
-      row.push(value);
-    }
+  for (var i = 0; i < 3; i++) {
+    row = this.board.slice(i * 3, i * 3 + 3).map(function(val) {
+      return val === null ? ' ' : val;
+    });
 
     output.push(' ' + i + ' | ' + row.join(' | ') + ' | ');
   }
@@ -103,9 +66,6 @@ Board.prototype.drawToConsole = function() {
   for (var k in output) {
     console.log(output[k]);
   }
-};
-
-Player = function() {
 };
 
 /**
@@ -162,3 +122,11 @@ for (var i = 0; i < cells.length; i++) {
     };
   })(i), false); 
 }
+
+
+
+/////////////////////
+
+var myBoard = new Board(['X', null, null, null, null, null, null, null, null]);
+
+var AI = new AIPlayer(myBoard);

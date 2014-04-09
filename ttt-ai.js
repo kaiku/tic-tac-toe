@@ -1,33 +1,4 @@
-var AIPlayer, Board2;
-
-Board2 = function() {
-  this.board = null;
-  this.init();
-};
-
-Board2.DEFAULTS = {
-  board: [null, null, null, null, null, null, null, null, null]
-};
-
-Board2.prototype.constructor = Board2;
-
-/**
- * @param {Array}
- */
-Board2.prototype.init = function(board) {
-  this.board = board || Board2.DEFAULTS.board;
-};
-
-/**
- * @return {Array} Array of indexes of available moves (0-8).
- */
-Board2.prototype.getAvailableMoves = function() {
-  var indexes = [];
-  for (var i in this.board) {
-    if (this.board[i] === null) indexes.push(i);
-  }
-  return indexes;
-};
+var AIPlayer;
 
 // AIPlayer
 
@@ -107,13 +78,3 @@ AIPlayer.prototype.getBoardValue = function() {
 AIPlayer.prototype.minimax = function(board, depth, maximizingPlayer) {
   var moves = board.getAvailableMoves();
 };
-
-/////////////////////
-
-var myBoard = new Board2(['X', null, null, null, null, null, null, null, null]);
-
-var AI = new AIPlayer(myBoard);
-
-console.log('Board value', AI.getBoardValue());
-
-//console.log(getBoardValue(myBoard));
