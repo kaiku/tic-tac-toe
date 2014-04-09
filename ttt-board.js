@@ -9,8 +9,16 @@ Board = function(board) {
   this.board = board || Board.DEFAULTS.board;
 };
 
+Board.X = 'X';
+Board.O = 'O';
+
 Board.DEFAULTS = {
-  board: [null, null, null, null, null, null, null, null, null]
+  board: [null, null, null, null, null, null, null, null, null],
+  rows: [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+  ]
 };
 
 Board.prototype.constructor = Board;
@@ -27,6 +35,12 @@ Board.prototype.reset = function() {
  */
 Board.prototype.getAvailableMoves = function() {
   var indexes = [];
+
+  // No more moves if either player has won.
+  if (this.isWin(Board.X) || this.isWin(Board.O)) {
+    return indexes;
+  }
+
   for (var i in this.board) {
     if (this.board[i] === null) indexes.push(i);
   }
@@ -37,10 +51,45 @@ Board.prototype.getAvailableMoves = function() {
  * @param {String}
  * @return {Boolean}
  */
+Board.prototype.isWin = function(piece) {
+  var rows = Board.DEFAULTS.rows;
+
+  for (var i in rows) {
+    if (
+      this.board[rows[i][0]] === piece &&
+      this.board[rows[i][1]] === piece &&
+      this.board[rows[i][2]] === piece
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+/**
+ * Is a draw if there are no more moves and neither player has won.
+ *
+ * @return {Boolean}
+ */
+Board.prototype.isDraw = function() {
+  return this.getAvailableMoves().length === 0 &&
+      !this.isWin(Board.X) &&
+      !this.isWin(Board.O);
+};
+
+/**
+ * @param {String}
+ * @return {Boolean}
+ */
 Board.prototype.isValidMove = function(point) {
   return this.board[point] === null;
 };
 
+/**
+ * @param {String}
+ * @param {Integer}
+ */
 Board.prototype.move = function(piece, point) {
   if (!this.isValidMove(point)) {
     throw 'Invalid move ' + point + ' for board ' + JSON.stringify(this.board);
@@ -49,6 +98,16 @@ Board.prototype.move = function(piece, point) {
   this.board[point] = piece;
 };
 
+/**
+ * @return {Array}
+ */
+Board.prototype.clone = function() {
+  return new Board(this.board.slice(0));
+};
+
+/**
+ * @return {Array}
+ */
 Board.prototype.getBoard = function() {
   return this.board;
 };

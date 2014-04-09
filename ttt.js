@@ -2,8 +2,8 @@ var TicTacToe;
 
 TicTacToe = function(player1, player2) {
   this.board     = null;
-  this.started   = null;
-  this.whoseTurn = null;
+  this.ended     = false;
+  this.whoseTurn = 0;
   this.players   = [player1, player2];
 
   this.reset();
@@ -13,16 +13,13 @@ TicTacToe = function(player1, player2) {
 TicTacToe.prototype.constructor = TicTacToe;
 
 TicTacToe.prototype.reset = function() {
-  this.board     = new Board();
-  this.started   = false;
-  this.whoseTurn = 0;
+  this.board = new Board();
 
   // Draw out the board.
   this.board.drawToConsole();
 };
 
 TicTacToe.prototype.start = function() {
-  this.started = true;
   this.players[0].setBoard(this.board);
   this.players[0].setPiece('X');
   this.players[1].setBoard(this.board);
@@ -35,30 +32,33 @@ TicTacToe.prototype.start = function() {
 TicTacToe.prototype.triggerMove = function() {
   var self = this;
 
-  this.acceptMove(this.players[this.whoseTurn].move());
+  if (this.ended) {
+    return;
+  }
 
-  // setTimeout(function() {
-  //   self.triggerMove();
-  // }, 500);
+  this.acceptMove(this.players[this.whoseTurn].move());
 };
 
 TicTacToe.prototype.acceptMove = function(move) {
   var currentPlayer = this.players[this.whoseTurn];
 
   try {
-    //console.log('currentPlayer', currentPlayer.piece);
-    //console.log('acceptMove', move);
-
     // Move the piece for the given player.
     this.board.move(currentPlayer.piece, move);
-
-    // Flip the turn.
-    this.whoseTurn = Number(!this.whoseTurn);
 
     // Redraw
     this.board.drawToConsole();
 
+    // Update the current player's board.
     currentPlayer.setBoard(this.board);
+
+    // Flip the turn.
+    this.whoseTurn = Number(!this.whoseTurn);
+
+    if (!this.board.getAvailableMoves().length || currentPlayer.hasWon()) {
+      console.log('Game is over; setting this.ended = true');
+      this.ended = true;
+    }
   } catch(e) {
     console.log('Error', e);
   }
@@ -66,9 +66,7 @@ TicTacToe.prototype.acceptMove = function(move) {
 
 ////////////////
 
-var ttt = new TicTacToe(new AIPlayer(), new AIPlayer());
-
-
+//var ttt = new TicTacToe(new AIPlayer(), new AIPlayer());
 
 var cells = document.getElementsByClassName('cell');
 
@@ -76,7 +74,7 @@ for (var i = 0; i < cells.length; i++) {
   cells[i].addEventListener('click', (function(i) {
     return function() {
       var coords = JSON.parse(cells[i].getAttribute('data-coord'));
-      ttt.triggerMove();
+      //ttt.triggerMove();
     };
   })(i), false); 
 }
