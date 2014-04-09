@@ -1,31 +1,29 @@
 var AIPlayer;
 
-// AIPlayer
-
-AIPlayer = function(board, piece) {
-  this.board = board;
-  this.piece = 'X';
+AIPlayer = function() {
+  Player.call(this);
 };
+
+$.extend(AIPlayer.prototype, Player.prototype);
 
 AIPlayer.prototype.constructor = AIPlayer;
-
-AIPlayer.prototype.updateBoard = function(board) {
-  this.board = board;
-};
 
 /**
  * Takes a three-element row and the piece of the maximizing player and computes
  * the value of the row according to our heuristic model.
+ * @param {Array}
+ * @param {Boolean}
  */
 AIPlayer.prototype.computeRowValue = function(row, maximizing) {
-  var isMaximizing,
+  var self = this,
+      isMaximizing,
       isNull,
       threeInRow,
       twoInRow,
       oneInRow;
 
   isMaximizing = function(val) {
-    return val === maximizing;
+    return val === self.piece;
   };
 
   isNull = function(val) {
@@ -72,9 +70,37 @@ AIPlayer.prototype.getPlayerSum = function(board, maximizing) {
 };
 
 AIPlayer.prototype.getBoardValue = function() {
-  return this.getPlayerSum(this.board, 'X') + (this.getPlayerSum(this.board, 'O') * -1);
+  return this.getPlayerSum(this.board, true) + (this.getPlayerSum(this.board, false) * -1);
 };
 
-AIPlayer.prototype.minimax = function(board, depth, maximizingPlayer) {
+/**
+ * Implements minimax.
+ *
+ * @param {Board}
+ * @param {Integer}
+ * @param {Boolean}
+ */
+AIPlayer.prototype.getBestMove = function(board, depth, maximizing) {
   var moves = board.getAvailableMoves();
+
+  if (depth === 0 || !moves.length) {
+    return board.getBoardValue();
+  }
+
+  var bestMove = moves[Math.round(Math.random() * (moves.length - 1))];
+
+  console.log('Best move', bestMove);
+  return bestMove;
 };
+
+AIPlayer.prototype.move = function() {
+  // Pick a random square if it's the first move.
+  if (this.board.getAvailableMoves().length === 9) {
+    return Math.round(Math.random() * 8); 
+  }
+
+  return this.getBestMove(this.board, 4, true);
+};
+
+
+
