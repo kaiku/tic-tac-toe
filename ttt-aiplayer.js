@@ -23,7 +23,7 @@ AIPlayer.prototype.computeRowValue = function(row, maximizing) {
       oneInRow;
 
   isMaximizing = function(val) {
-    return val === self.piece;
+    return val === maximizing;
   };
 
   isNull = function(val) {
@@ -41,9 +41,9 @@ AIPlayer.prototype.computeRowValue = function(row, maximizing) {
   if (twoInRow) return 10;
 
   oneInRow =
-    (row.slice(0, 2).every(isNull) && row[2] === maximizing) ||
-    (row.slice(1, 2).every(isNull) && row[0] === maximizing) ||
-    (row[0] === null && row[1] === maximizing && row[2] === null);
+    (row.slice(0, 2).every(isNull) && isMaximizing(row[2])) ||
+    (row.slice(1, 2).every(isNull) && isMaximizing(row[0])) ||
+    (row[0] === null && row[1] === isMaximizing(maximizing) && row[2] === null);
 
   if (oneInRow) return 1;
 
@@ -58,7 +58,7 @@ AIPlayer.prototype.getPlayerSum = function(board, maximizing) {
   rows = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
-    [0, 4, 7], [2, 4, 6]
+    [0, 4, 8], [2, 4, 6]
   ];
 
   for (var i in rows) {
@@ -69,8 +69,21 @@ AIPlayer.prototype.getPlayerSum = function(board, maximizing) {
   return sum;
 };
 
-AIPlayer.prototype.getBoardValue = function() {
-  return this.getPlayerSum(this.board, true) + (this.getPlayerSum(this.board, false) * -1);
+AIPlayer.prototype.getBoardValue = function(board) {
+  var maximizingPiece = this.piece;
+  var minimizingPiece = maximizingPiece === 'X' ? 'O' : 'X';
+  return this.getPlayerSum(board, maximizingPiece) + (this.getPlayerSum(board, minimizingPiece) * -1);
+};
+
+/**
+ * @param {Array}
+ */
+AIPlayer.prototype.getAvailableMoves = function(board) {
+  var indexes = [];
+  for (var i in board) {
+    if (board[i] === null) indexes.push(i);
+  }
+  return indexes;
 };
 
 /**
@@ -80,17 +93,47 @@ AIPlayer.prototype.getBoardValue = function() {
  * @param {Integer}
  * @param {Boolean}
  */
-AIPlayer.prototype.getBestMove = function(board, depth, maximizing) {
-  var moves = board.getAvailableMoves();
+AIPlayer.prototype.minimax = function(board, depth, maximizing) {
+  var moves = this.getAvailableMoves(board),
+      bestMove = null,
+      bestValue = maximizing ? -100 : 100,
+      localValue;
 
   if (depth === 0 || !moves.length) {
-    return board.getBoardValue();
+    bestValue = this.getBoardValue(board);
+  } else {
+    if (maximizing) {
+      for (var i in moves) {
+        var newRawBoard = board.slice(0);
+        newRawBoard[moves[i]] = this.piece;
+
+        // [bestValue, bestMove]
+        localValue = this.minimax(newRawBoard, depth - 1, false);
+
+        //console.log('maximizing', localValue[0], bestValue);
+
+        if (localValue[0] > bestValue) {
+          bestMove  = moves[i];
+          bestValue = localValue[0];
+        }
+      }
+    } else {
+      for (var i in moves) {
+        // TODO: cleanup
+        var newRawBoard = board.slice(0);
+        newRawBoard[moves[i]] = this.piece === 'X' ? 'O' : 'X';
+
+        localValue = this.minimax(newRawBoard, depth - 1, true);
+        
+        if (localValue[0] < bestValue) {
+          bestMove  = moves[i];
+          bestValue = localValue[0];          
+        }
+      }
+    }
   }
 
-  var bestMove = moves[Math.round(Math.random() * (moves.length - 1))];
-
-  console.log('Best move', bestMove);
-  return bestMove;
+  return [bestValue, bestMove];
 };
 
 AIPlayer.prototype.move = function() {
@@ -99,8 +142,18 @@ AIPlayer.prototype.move = function() {
     return Math.round(Math.random() * 8); 
   }
 
-  return this.getBestMove(this.board, 4, true);
+  var minimaxResult = this.minimax(this.board.getBoard(), 4, true);
+
+  return minimaxResult[1];
 };
+
+
+/////////////////
+
+// var ai = new AIPlayer();
+// ai.setPiece('X');
+// var value = ai.getBoardValue(['X', 'X', 'X', null, null, null, null, null, null]);
+// console.log('VALUE', value);
 
 
 

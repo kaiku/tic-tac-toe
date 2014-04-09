@@ -43,7 +43,7 @@ Board.prototype.isValidMove = function(point) {
 
 Board.prototype.move = function(piece, point) {
   if (!this.isValidMove(point)) {
-    throw 'Invalid move';
+    throw 'Invalid move ' + point + ' for board ' + JSON.stringify(this.board);
   }
 
   this.board[point] = piece;

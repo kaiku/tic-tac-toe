@@ -46,6 +46,9 @@ TicTacToe.prototype.acceptMove = function(move) {
   var currentPlayer = this.players[this.whoseTurn];
 
   try {
+    //console.log('currentPlayer', currentPlayer.piece);
+    //console.log('acceptMove', move);
+
     // Move the piece for the given player.
     this.board.move(currentPlayer.piece, move);
 
@@ -54,7 +57,11 @@ TicTacToe.prototype.acceptMove = function(move) {
 
     // Redraw
     this.board.drawToConsole();
-  } catch(e) {}
+
+    currentPlayer.setBoard(this.board);
+  } catch(e) {
+    console.log('Error', e);
+  }
 };
 
 ////////////////
@@ -70,7 +77,6 @@ for (var i = 0; i < cells.length; i++) {
     return function() {
       var coords = JSON.parse(cells[i].getAttribute('data-coord'));
       ttt.triggerMove();
-      //ttt.move('X', coords[0], coords[1]);
     };
   })(i), false); 
 }
