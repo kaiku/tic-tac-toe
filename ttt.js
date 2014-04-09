@@ -66,7 +66,7 @@ TicTacToe.prototype.acceptMove = function(move) {
 
 ////////////////
 
-//var ttt = new TicTacToe(new AIPlayer(), new AIPlayer());
+var ttt = new TicTacToe(new AIPlayer(), new AIPlayer());
 
 var cells = document.getElementsByClassName('cell');
 
@@ -74,7 +74,7 @@ for (var i = 0; i < cells.length; i++) {
   cells[i].addEventListener('click', (function(i) {
     return function() {
       var coords = JSON.parse(cells[i].getAttribute('data-coord'));
-      //ttt.triggerMove();
+      ttt.triggerMove();
     };
   })(i), false); 
 }

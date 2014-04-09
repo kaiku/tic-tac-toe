@@ -78,6 +78,10 @@ Board.prototype.isDraw = function() {
       !this.isWin(Board.O);
 };
 
+Board.prototype.isGameOver = function() {
+  return this.getAvailableMoves().length === 0;
+};
+
 /**
  * @param {String}
  * @return {Boolean}

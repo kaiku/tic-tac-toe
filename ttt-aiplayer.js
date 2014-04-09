@@ -2,6 +2,7 @@ var AIPlayer;
 
 AIPlayer = function() {
   Player.call(this);
+
 };
 
 $.extend(AIPlayer.prototype, Player.prototype);
@@ -87,9 +88,6 @@ AIPlayer.prototype.getBoardValue = function(board) {
       boardArray[Board.DEFAULTS.rows[i][1]],
       boardArray[Board.DEFAULTS.rows[i][2]]
     ];
-
-    // testscore = getRowHeuristicValue.call(this, row);
-    // console.log(JSON.stringify(row), testscore);
     
     sum += getRowHeuristicValue.call(this, row);
   }
@@ -97,96 +95,63 @@ AIPlayer.prototype.getBoardValue = function(board) {
   return sum;
 };
 
-/**
- * Implements minimax.
- *
- * @param {Board}
- * @param {Integer}
- * @param {Boolean}
- */
-
-AIPlayer.prototype.minimax = function(board, depth, maximizing) {
+AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
   var moves = board.getAvailableMoves(),
-      bestMove = null,
-      bestValue = maximizing ? -100 : 100,
-      localValue,
-      clonedBoard;
+      potentialMoves = [],
+      bestValue = maximizing ? -Infinity : Infinity,
+      bestMove;
 
   if (depth === 0 || !moves.length) {
-    bestValue = this.getBoardValue(board);
+    return [this.getBoardValue(board), bestMove];
+  }
+
+  if (maximizing) {
+    for (var i in moves) {
+      var childBoard = board.clone();
+      childBoard.move(this.piece, moves[i]);
+
+      // Create a new "child" board, move the piece, and calculate the minimax on that.
+      // Returns an array of [value, move index].
+      var result = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
+
+      if (result[0] > alpha) {
+        alpha = result[0];
+        bestValue = alpha;
+        bestMove = moves[i];
+      }
+      if (alpha >= beta) break;
+    }
   } else {
-    if (maximizing) {
-      for (var i in moves) {
-        clonedBoard = board.clone();
-        clonedBoard.move(this.piece, moves[i]);
+    for (var i in moves) {
+      var childBoard = board.clone();
+      childBoard.move(this.opponentPiece, moves[i]);
 
-        localValue = this.minimax(clonedBoard, depth - 1, false);
+      // Create a new "child" board, move the piece, and calculate the minimax on that.
+      // Returns an array of [value, move index].
+      var result = this.minimax(childBoard, depth - 1, !maximizing, alpha, beta);
 
-        if (localValue[0] > bestValue) {
-          bestMove  = moves[i];
-          bestValue = localValue[0];
-        }
+      if (result[0] < beta) {
+        beta = result[0];
+        bestValue = beta;
+        bestMove = moves[i];
       }
-    } else {
-      for (var i in moves) {
-        clonedBoard = board.clone();
-        clonedBoard.move(this.piece, moves[i]);
-
-        localValue = this.minimax(clonedBoard, depth - 1, true);
-        
-        if (localValue[0] < bestValue) {
-          bestMove  = moves[i];
-          bestValue = localValue[0];          
-        }
-      }
+      if (alpha >= beta) break;
     }
   }
 
-  //console.log('aaa', bestValue, bestMove);
   return [bestValue, bestMove];
 };
 
+
 AIPlayer.prototype.move = function() {
-  // Pick a random square if it's the first move.
-  if (this.board.getAvailableMoves().length === 9) {
-    return Math.round(Math.random() * 8);
+  var numAvailableMoves = this.board.getAvailableMoves().length,
+      bound = numAvailableMoves + 1;
 
-    // Pick a specific one
-    //return 6;
-  }
+  // Pick the upper right square if this is the first move.
+  if (numAvailableMoves === 9) return Math.floor(Math.random() * 9);
 
-  var minimaxResult = this.minimax(this.board, 2, true);
+  var minimaxResult = this.minimax(this.board, 4, true, -Infinity, Infinity);
 
   return minimaxResult[1];
 };
-
-/////////////////
-
-var ai = new AIPlayer();
-ai.setPiece(Board.O);
-
-var myBoard = new Board(['O', null, 'X', null, null, null, 'X', null, null]);
-
-myBoard.drawToConsole();
-console.log('value', ai.getBoardValue(myBoard));
-
-// Compare X blocking vertical, or moving to upper right as it seems to be doing.
-betterBoard = myBoard.clone();
-worseBoard  = myBoard.clone();
-
-betterBoard.move(ai.piece, 4);
-worseBoard.move(ai.piece, 1);
-
-// betterBoard.drawToConsole();
-// console.log('better value', ai.getBoardValue(betterBoard));
-// worseBoard.drawToConsole();
-// console.log('worse value', ai.getBoardValue(worseBoard));
-
-// var betterResult = ai.minimax(betterBoard, 1, true);
-// var worseResult = ai.minimax(worseBoard, 1, true);
-var betterResult = ai.minimax(myBoard, 4, true);
-
-console.log('better result', JSON.stringify(betterResult));
-// console.log('worse result', JSON.stringify(worseResult));
-
 
