@@ -1,5 +1,5 @@
 $(function() {
-  var myBoard = $('#tic-tac-toe').ttt('human', 'ai'),
+  var myBoard = $('#tic-tac-toe').ttt('ai', 'human', {autostart: false}),
       myCells = myBoard.find('.board-cell');
 
   // Handle cell clicking.
@@ -51,4 +51,7 @@ $(function() {
   $('#reset').on('click', function() {
     myBoard.trigger($.Event('ttt.api.reset'));
   });
+
+  // Finally, trigger reset to kick things off.
+  myBoard.trigger($.Event('ttt.api.reset'));
 });

@@ -8,12 +8,13 @@
    * ======================================================================== */
 
 
-  TicTacToe = function(element, player1, player2) {
+  TicTacToe = function(element, player1, player2, options) {
     var X = Board.X,
         O = Board.O
         self = this;
 
     this.$element = $(element);
+    this.options = $.extend({}, TicTacToe.DEFAULTS, options);
     this.board = null;
     this.currentPiece = X;
     this.players = {
@@ -30,7 +31,13 @@
       self.reset.call(self);
     });
 
-    this.reset();
+    if (this.options.autostart) {
+      this.reset();
+    }
+  };
+
+  TicTacToe.DEFAULTS = {
+    autostart: true
   };
 
   TicTacToe.prototype.constructor = TicTacToe;
@@ -452,7 +459,7 @@
     if (numAvailableMoves === 9) {
       move = Math.floor(Math.random() * numAvailableMoves);
     } else {
-      move = this.minimax(this.board, 4, true, -Infinity, Infinity)[1];
+      move = this.minimax(this.board, 6, true, -Infinity, Infinity)[1];
     }
 
     this.manager.move(move);

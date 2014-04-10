@@ -154,7 +154,7 @@ h1 {
 
 .board.draw .board-cell:before,
 .board.win .board-cell:before {
-  color: #ccc !important;
+  color: #cfcfcf !important;
 }
 
 /* Win */
