@@ -135,7 +135,7 @@
     }
 
     for (var i in this.board) {
-      if (this.board[i] === null) indexes.push(i);
+      if (this.board[i] === null) indexes.push(parseInt(i));
     }
     return indexes;
   };
