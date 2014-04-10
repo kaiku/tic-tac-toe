@@ -101,46 +101,64 @@ h1 {
   border-collapse: collapse;
 }
 
-.board-row {
-  margin-bottom: 15px;
-}
-
-.board-row:last-child {
-  margin-bottom: 0;
-}
-
 .board-cell {
 	float: left;
 	width: 120px;
 	height: 120px;
   display: block;
-  margin-right: 15px;
-  background: #eee;
+  margin: 0 15px 15px 0;
+  background: #F6F6F6;
   cursor: pointer;
   border-radius: 6px;
 }
 
-.board-cell:last-child {
+.board-cell:nth-child(3n) {
   margin-right: 0;
 }
 
 .board-cell:before {
-  font-weight: bold;
-  font-size: 92px;
   position: absolute;
-  line-height: 120px;
   width: 120px;
   height: 120px;
   text-align: center;
-  vertical-align: middle;
+  font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  font-size: 0px;
+  line-height: 120px;
+  content: ' ';
+  color: #2b6897;
+  -webkit-transition: all .4s ease;
+  -moz-transition: all .4s ease;
+  -o-transition: all .4s ease;
+  -ms-transition: all .4s ease;
 }
 
 .board-cell.x:before {
 	content: 'X';
+  font-size: 92px;
+  color: #163f5e;
 }
 
 .board-cell.o:before {
 	content: 'O';
+  font-size: 92px;
+  color: #2b6897;
+}
+
+/* Draw */
+
+.board.draw .board-cell {
+  cursor: default;
+}
+
+.board.draw .board-cell:before {
+  color: #ccc !important;
+}
+
+/* Win: highlight cells; */
+
+.board.win.win-0 .board-cell:nth-child(0)::before {
+  color: red !important;
 }
 
 .pull-right {

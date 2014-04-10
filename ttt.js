@@ -142,7 +142,7 @@
 
   /**
    * @param {String}
-   * @return {Boolean}
+   * @return {*} Returns the array of win points or boolean.
    */
   Board.prototype.isWin = function(piece) {
     var rows = Board.ROWS;
@@ -153,7 +153,7 @@
         this.board[rows[i][1]] === piece &&
         this.board[rows[i][2]] === piece
       ) {
-        return true;
+        return rows[i];
       }
     }
 
@@ -434,6 +434,7 @@
   AIPlayer.prototype.move = function() {
     var board = this.manager.getBoard(),
         numAvailableMoves = board.getAvailableMoves().length,
+        self = this,
         move;
 
     // Save the board.
