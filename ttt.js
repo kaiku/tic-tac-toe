@@ -475,14 +475,15 @@
   $.fn.ttt = function(player1, player2, options) {
     return this.each(function() {
       var $this   = $(this),
-          data    = $this.data('ttt'),
-          options = options || {};
+          data    = $this.data('ttt');
+
+      options = options || {};
 
       // Defaults.
       player1 = (player1 || 'human') === 'human' ? new HumanPlayer() : new AIPlayer();
       player2 = (player2 || 'ai') === 'human' ? new HumanPlayer() : new AIPlayer();
 
-      $this.data('ttt', new TicTacToe(this, player1, player2));
+      $this.data('ttt', new TicTacToe(this, player1, player2, options));
     })
   };
 
