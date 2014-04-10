@@ -468,7 +468,7 @@
   $.fn.ttt = function(player1, player2) {
     return this.each(function() {
       var $this   = $(this),
-          data    = $this.data('ttt');
+          data    = $this.data('ttt'),
           player1 = player1 || 'human',
           player2 = player2 || 'ai';
 
