@@ -1,4 +1,6 @@
 $(function() {
+  'use strict';
+
   var myBoard = $('#tic-tac-toe').ttt('ai', 'human', {autostart: false}),
       myCells = myBoard.find('.board-cell');
 

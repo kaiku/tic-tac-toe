@@ -1,4 +1,6 @@
-!function($) {
+(function($) {
+  'use strict';
+
   var TicTacToe, Board, Player, HumanPlayer, AIPlayer;
 
 
@@ -10,7 +12,7 @@
 
   TicTacToe = function(element, player1, player2, options) {
     var X = Board.X,
-        O = Board.O
+        O = Board.O,
         self = this;
 
     this.$element = $(element);
@@ -70,7 +72,9 @@
    * Players will notify the manager that they've moved via this method.
    */
   TicTacToe.prototype.move = function(point) {
-    var self = this;
+    var self = this,
+        winPointsX,
+        winPointsO;
 
     if (this.board.isGameOver()) {
       return;
@@ -89,17 +93,20 @@
 
       // Announce the appropriate events if we're in a terminal state.
       if (this.board.isGameOver()) {
-        if (winPoints = this.board.isWin(Board.X)) {
+        winPointsX = this.board.isWin(Board.X);
+        winPointsO = this.board.isWin(Board.O);
+
+        if (winPointsX) {
           this.$element.trigger($.Event('ttt.on.end', {
             state: 'win',
             winner: Board.X,
-            winningPoints: winPoints
+            winningPoints: winPointsX
           }));
-        } else if (winPoints = this.board.isWin(Board.O)) {
+        } else if (winPointsO) {
           this.$element.trigger($.Event('ttt.on.end', {
             state: 'win',
             winner: Board.O,
-            winningPoints: winPoints
+            winningPoints: winPointsO
           }));
         } else if (this.board.isDraw()) {
           this.$element.trigger($.Event('ttt.on.end', {state: 'draw'}));
@@ -229,15 +236,18 @@
    * Renders the tic-tac-toe board in the console.
    */
   Board.prototype.drawToConsole = function() {
-    var output = [], row;
+    var output = [],
+        row,
+        formatter;
+
+    formatter = function(val) {
+      return val === null ? ' ' : val;
+    };
 
     output.push('   +-----------+ ');
 
     for (var i = 0; i < 3; i++) {
-      row = this.board.slice(i * 3, i * 3 + 3).map(function(val) {
-        return val === null ? ' ' : val;
-      });
-
+      row = this.board.slice(i * 3, i * 3 + 3).map(formatter);
       output.push(' ' + i + ' | ' + row.join(' | ') + ' | ');
     }
 
@@ -402,7 +412,8 @@
         bestValue = maximizing ? -Infinity : Infinity,
         bestMove,
         childBoard,
-        minimaxResult;
+        minimaxResult,
+        i;
 
     // Return the value/move if game is in a terminal state or we're at our depth.
     if (depth === 0 || !moves.length) {
@@ -410,7 +421,7 @@
     }
 
     if (maximizing) { // This AI
-      for (var i in moves) {
+      for (i in moves) {
         // Copy the current board and push a move on it.
         childBoard = board.clone();
         childBoard.move(this.piece, moves[i]);
@@ -427,7 +438,7 @@
         if (alpha >= beta) break;
       }
     } else { // Opponent
-      for (var i in moves) {
+      for (i in moves) {
         childBoard = board.clone();
         childBoard.move(this.opponentPiece, moves[i]);
 
@@ -484,8 +495,8 @@
       player2 = (player2 || 'ai') === 'human' ? new HumanPlayer() : new AIPlayer();
 
       $this.data('ttt', new TicTacToe(this, player1, player2, options));
-    })
+    });
   };
 
   $.fn.ttt.Constructor = TicTacToe;
-}(jQuery);
+}(jQuery));
