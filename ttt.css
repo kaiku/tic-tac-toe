@@ -1,15 +1,148 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.cf:before,
+.cf:after {
+    content: ' ';
+    display: table;
+}
+
+.cf:after {
+    clear: both;
+}
+
+/* apply a natural box layout model to all elements */
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(-9deg, #218be0, #3797e3) fixed 0% 0% transparent;
+  font-family: 'Open Sans Condensed', sans-serif;
+}
+
+h1 {
+  font-size: 48px;
+  color: #fff;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.btn {
+  font-size: 24px;
+}
+
+.container {
+	width: 422px;
+	margin: 60px auto;
+}
+
 .board {
-	display: table;
+	width: 422px;
+	height: 422px;
+  padding: 15px;
+	box-shadow: 0px 0px 5px #94c1ff;
+  border: 1px solid #94c1ff;
+  background: #fff;
+  border-radius: 12px;
+  border-collapse: collapse;
 }
 
-.board > .row {
-	display: table-row;
+.board-row {
+  margin-bottom: 15px;
 }
 
-.board > .row > .cell {
-	display: table-cell;
-	width: 100px;
-	height: 100px;
-	background: pink;
-	border: 2px solid #fff;
+.board-row:last-child {
+  margin-bottom: 0;
+}
+
+.board-cell {
+	float: left;
+	width: 120px;
+	height: 120px;
+  display: block;
+  margin-right: 15px;
+  background: #eee;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.board-cell:last-child {
+  margin-right: 0;
+}
+
+.board-cell:before {
+  font-weight: bold;
+  font-size: 92px;
+  position: absolute;
+  line-height: 120px;
+  width: 120px;
+  height: 120px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.board-cell.x:before {
+	content: 'X';
+}
+
+.board-cell.o:before {
+	content: 'O';
+}
+
+.pull-right {
+  float: right;
 }

@@ -443,7 +443,7 @@
     if (numAvailableMoves === 9) {
       move = Math.floor(Math.random() * numAvailableMoves);
     } else {
-      move = this.minimax(this.board, 1, true, -Infinity, Infinity)[1];
+      move = this.minimax(this.board, 4, true, -Infinity, Infinity)[1];
     }
 
     this.manager.move(move);
