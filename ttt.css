@@ -16,35 +16,35 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup, 
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-	margin: 0;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-	font: inherit;
-	vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, 
 footer, header, hgroup, menu, nav, section {
-	display: block;
+  display: block;
 }
 body {
-	line-height: 1;
+  line-height: 1;
 }
 ol, ul {
-	list-style: none;
+  list-style: none;
 }
 blockquote, q {
-	quotes: none;
+  quotes: none;
 }
 blockquote:before, blockquote:after,
 q:before, q:after {
-	content: '';
-	content: none;
+  content: '';
+  content: none;
 }
 table {
-	border-collapse: collapse;
-	border-spacing: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
 
 .cf:before,
@@ -86,15 +86,15 @@ h1 {
 }
 
 .container {
-	width: 422px;
-	margin: 60px auto;
+  width: 422px;
+  margin: 60px auto;
 }
 
 .board {
-	width: 422px;
-	height: 422px;
+  width: 422px;
+  height: 422px;
   padding: 15px;
-	box-shadow: 0px 0px 5px #94c1ff;
+  box-shadow: 0px 0px 5px #94c1ff;
   border: 1px solid #94c1ff;
   background: #fff;
   border-radius: 12px;
@@ -102,9 +102,9 @@ h1 {
 }
 
 .board-cell {
-	float: left;
-	width: 120px;
-	height: 120px;
+  float: left;
+  width: 120px;
+  height: 120px;
   display: block;
   margin: 0 15px 15px 0;
   background: #F6F6F6;
@@ -134,13 +134,13 @@ h1 {
 }
 
 .board-cell.x:before {
-	content: 'X';
+  content: 'X';
   font-size: 92px;
   color: #163f5e;
 }
 
 .board-cell.o:before {
-	content: 'O';
+  content: 'O';
   font-size: 92px;
   color: #2b6897;
 }
@@ -166,3 +166,4 @@ h1 {
 .pull-right {
   float: right;
 }
+
