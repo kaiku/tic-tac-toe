@@ -145,20 +145,22 @@ h1 {
   color: #2b6897;
 }
 
-/* Draw */
+/* Win, Draw */
 
-.board.draw .board-cell {
+.board.draw .board-cell,
+.board.win .board-cell {
   cursor: default;
 }
 
-.board.draw .board-cell:before {
+.board.draw .board-cell:before,
+.board.win .board-cell:before {
   color: #ccc !important;
 }
 
-/* Win: highlight cells; */
+/* Win */
 
-.board.win.win-0 .board-cell:nth-child(0)::before {
-  color: red !important;
+.board.win .board-cell.hilite:before {
+  color: #ff6f00 !important;
 }
 
 .pull-right {

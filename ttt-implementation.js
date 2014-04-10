@@ -19,27 +19,33 @@ $(function() {
     myBoard.find('.board-cell').eq(point).addClass(piece.toLowerCase());
   });
 
-  // When the board reports that a reset action has occurred.
-  myBoard.on('ttt.on.reset', function(e) {
-    myCells.removeClass('x o');
-    myBoard.removeClass('end win draw win-x win-o');
-  });
-
   // Listen for the game end event and add appropriate classes.
   myBoard.on('ttt.on.end', function(e) {
-    var className;
+    var boardClass;
 
     switch (e.state) {
       case 'win':
-        className = 'end win win-0 win-' + e.winner.toLowerCase();
+        boardClass = 'end win win-' + e.winner.toLowerCase();
+
+        // Add special classes to the appropriate pieces
+        for (var i in e.winningPoints) {
+          myBoard.find('.board-cell').eq(e.winningPoints[i]).addClass('hilite');
+        }
+
         break;
 
       case 'draw':
-        className = 'end draw';
+        boardClass = 'end draw';
     }
 
-    myBoard.addClass(className);
-  })
+    myBoard.addClass(boardClass);
+  });
+
+  // When the board reports that a reset action has occurred.
+  myBoard.on('ttt.on.reset', function(e) {
+    myCells.removeClass('x o hilite');
+    myBoard.removeClass('end win draw win-x win-o');
+  });
 
   // Reset button
   $('#reset').on('click', function() {

@@ -82,10 +82,18 @@
 
       // Announce the appropriate events if we're in a terminal state.
       if (this.board.isGameOver()) {
-        if (this.board.isWin(Board.X)) {
-          this.$element.trigger($.Event('ttt.on.end', {state: 'win', winner: Board.X}));
-        } else if (this.board.isWin(Board.O)) {
-          this.$element.trigger($.Event('ttt.on.end', {state: 'win', winner: Board.O}));
+        if (winPoints = this.board.isWin(Board.X)) {
+          this.$element.trigger($.Event('ttt.on.end', {
+            state: 'win',
+            winner: Board.X,
+            winningPoints: winPoints
+          }));
+        } else if (winPoints = this.board.isWin(Board.O)) {
+          this.$element.trigger($.Event('ttt.on.end', {
+            state: 'win',
+            winner: Board.O,
+            winningPoints: winPoints
+          }));
         } else if (this.board.isDraw()) {
           this.$element.trigger($.Event('ttt.on.end', {state: 'draw'}));
         }
