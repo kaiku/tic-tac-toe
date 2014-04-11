@@ -16,13 +16,26 @@ h1 {
   margin-bottom: 20px;
 }
 
+a {
+  font-weight: bold;
+}
+
+a:link, a:visited {
+  color: #fff;
+}
+
 .page-container {
   width: 422px;
-  margin: 60px auto;
+  margin: 60px auto 20px;
 }
 
 #controls {
   margin-top: 12px;
+}
+
+#controls .btn,
+#controls .dropdown-menu > li > a {
+  font-weight: bold;
 }
 
 .board {
@@ -34,6 +47,7 @@ h1 {
   background: #fff;
   border-radius: 12px;
   border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
 .board-cell {
