@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         files: [
           {
             src: 'src/ttt.js',
-            dest: 'examples/src/ttt.js'
+            dest: 'examples/assets/ttt.js'
           }
         ]
       }
