@@ -314,11 +314,16 @@
    * ======================================================================== */
 
 
-  AIPlayer = function() {
+  AIPlayer = function(options) {
     Player.call(this);
+    this.options = $.extend({}, AIPlayer.DEFAULTS, options);
   };
 
   $.extend(AIPlayer.prototype, Player.prototype);
+
+  AIPlayer.DEFAULTS = {
+    moveDelay: 0
+  };
 
   AIPlayer.type = 'ai';
 
@@ -483,7 +488,9 @@
       move = this.minimax(this.board, 6, true, -Infinity, Infinity)[1];
     }
 
-    this.manager.move(move);
+    setTimeout($.proxy(function() {
+      this.manager.move(move);
+    }, this), this.options.moveDelay);
   };
 
 
@@ -495,15 +502,26 @@
 
   $.fn.ttt = function(player1, player2, options) {
     return this.each(function() {
-      var $this = $(this);
+      var $this = $(this),
+          aiOptions = {},
+          player1Obj,
+          player2Obj;
 
       options = options || {};
 
       // Defaults.
-      player1 = (player1 || 'human') === 'human' ? new HumanPlayer() : new AIPlayer();
-      player2 = (player2 || 'ai') === 'human' ? new HumanPlayer() : new AIPlayer();
+      player1 = player1 || 'human';
+      player2 = player2 || 'ai';
 
-      $this.data('ttt', new TicTacToe(this, player1, player2, options));
+      // If two AI players are playing against each other, delay moves.
+      if (player1 === 'ai' && player2 === 'ai') {
+        aiOptions = {moveDelay: 300};
+      }
+
+      player1Obj = player1 === 'human' ? new HumanPlayer() : new AIPlayer(aiOptions);
+      player2Obj = player2 === 'human' ? new HumanPlayer() : new AIPlayer(aiOptions);
+
+      $this.data('ttt', new TicTacToe(this, player1Obj, player2Obj, options));
     });
   };
 
