@@ -495,8 +495,7 @@
 
   $.fn.ttt = function(player1, player2, options) {
     return this.each(function() {
-      var $this   = $(this),
-          data    = $this.data('ttt');
+      var $this = $(this);
 
       options = options || {};
 
