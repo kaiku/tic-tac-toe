@@ -131,6 +131,7 @@
 
   /* ========================================================================
    * Board
+   * The board is represented by a flat, nine-element array.
    * ======================================================================== */
 
 
@@ -152,7 +153,7 @@
   Board.prototype.constructor = Board;
 
   /**
-   * @return {Array} Array of indexes of available moves (0-8).
+   * Returns an array of indexes of available moves (0-8).
    */
   Board.prototype.getAvailableMoves = function() {
     var indexes = [];
@@ -169,8 +170,7 @@
   };
 
   /**
-   * @param {String}
-   * @return {*} Returns the array of win points or boolean.
+   * Takes a piece and returns the array of points (row) of the win, or false.
    */
   Board.prototype.isWin = function(piece) {
     var rows = Board.ROWS;
@@ -189,7 +189,7 @@
   };
 
   /**
-   * @return {Boolean}
+   * Was the game a draw?
    */
   Board.prototype.isDraw = function() {
     return this.getAvailableMoves().length === 0 &&
@@ -198,23 +198,21 @@
   };
 
   /**
-   * @return {Boolean}
+   * Is the game in a terminal state?
    */
   Board.prototype.isGameOver = function() {
     return this.getAvailableMoves().length === 0;
   };
 
   /**
-   * @param {String}
-   * @return {Boolean}
+   * Can that move be made on the board, i.e. is the space free?
    */
   Board.prototype.isValidMove = function(point) {
     return this.board[point] === null;
   };
 
   /**
-   * @param {String}
-   * @param {Integer}
+   * Moves a piece to the given point 0-8.
    */
   Board.prototype.move = function(piece, point) {
     if (!this.isValidMove(point)) {
@@ -225,14 +223,14 @@
   };
 
   /**
-   * @return {Array}
+   * Copies the board and returns a new board object.
    */
   Board.prototype.clone = function() {
     return new Board(this.board.slice(0));
   };
 
   /**
-   * @return {Array}
+   * Returns the array representation of the board.
    */
   Board.prototype.toArray = function() {
     return this.board;
@@ -415,11 +413,7 @@
   };
 
   /**
-   * @param {Board}
-   * @param {Integer}
-   * @param {Boolean}
-   * @param {Integer}
-   * @param {Integer}
+   * Implements minimax with alpha-beta pruning.
    */
   AIPlayer.prototype.minimax = function(board, depth, maximizing, alpha, beta) {
     var moves = board.getAvailableMoves(),
