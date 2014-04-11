@@ -14,17 +14,6 @@ module.exports = function(grunt) {
       examples: {
         files: [
           {
-            expand: true,
-            flatten: true,
-            src: [
-              'bower_components/bootstrap/dist/css/bootstrap.min.css',
-              'bower_components/bootstrap/dist/js/bootstrap.min.js',
-              'bower_components/jquery/dist/jquery.min.js'
-            ],
-            dest: 'examples/vendor',
-            filter: 'isFile'
-          },
-          {
             src: 'src/ttt.js',
             dest: 'examples/src/ttt.js'
           }
