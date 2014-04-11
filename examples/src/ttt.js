@@ -485,7 +485,7 @@
     if (numAvailableMoves === 9) {
       move = Math.floor(Math.random() * numAvailableMoves);
     } else {
-      move = this.minimax(this.board, 6, true, -Infinity, Infinity)[1];
+      move = this.minimax(this.board, 8, true, -Infinity, Infinity)[1];
     }
 
     setTimeout($.proxy(function() {
