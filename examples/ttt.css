@@ -21,6 +21,10 @@ h1 {
   margin: 60px auto;
 }
 
+#controls {
+  margin-top: 12px;
+}
+
 .board {
   width: 422px;
   height: 422px;
