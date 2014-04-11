@@ -1,8 +1,9 @@
 $(function() {
   'use strict';
 
-  var myBoard = $('#tic-tac-toe').ttt('ai', 'human', {autostart: false}),
-      myCells = myBoard.find('.board-cell');
+  var myBoard = $('#tic-tac-toe'),
+      myCells = myBoard.find('.board-cell'),
+      gameplayToggle = $('#gameplay-toggle');
 
   // Handle cell clicking.
   myCells.on('click', function() {
@@ -49,11 +50,26 @@ $(function() {
     myBoard.removeClass('end win draw win-x win-o');
   });
 
+  // The toggling element that switches gameplay mode.
+  gameplayToggle.find('li a').on('click', function() {
+    var $this = $(this),
+        players;
+
+    // Switch the label
+    gameplayToggle.find('.gameplay-label').text($this.text());
+
+    // Get the players
+    players = $this.attr('data-value').split('-');
+
+    // Trigger the game
+    myBoard.ttt.apply(myBoard, players);
+  });
+
   // Reset button
   $('#reset').on('click', function() {
     myBoard.trigger($.Event('ttt.api.reset'));
   });
 
-  // Finally, trigger reset to kick things off.
-  myBoard.trigger($.Event('ttt.api.reset'));
+  // Kick off an AI-Human game.
+  gameplayToggle.find('li a[data-value="ai-human"]').click();
 });
