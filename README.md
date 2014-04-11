@@ -2,7 +2,9 @@
 
 ## Initial setup
 
-Run `npm install && bower install` to install development dependencies. Use `grunt watch` to keep the examples folder in sync with the source file while developing, and then use `grunt` to make sure everything is neat and tidy when you're done.
+Run `npm install` to install development dependencies. Use `grunt watch` to keep the examples folder in sync with the source file while developing, and then use `grunt` to make sure everything is neat and tidy when you're done.
+
+See the example by running `npm server.js`. Specify a port other than the default of 8080 with `npm server.js 9090`.
 
 ## About the game
 
