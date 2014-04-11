@@ -24,14 +24,20 @@
       O: player2
     };
 
-    // Move is called on the element.
-    this.$element.on('ttt.api.move', function(e) {
-      self.move.call(self, e.move);
-    });
+    // Call off before on to ensure we don't double bind the event when
+    // re-initializing the gameplay.
 
-    this.$element.on('ttt.api.reset', function() {
-      self.reset.call(self);
-    });
+    this.$element
+      .off('ttt.api.move')
+      .on('ttt.api.move', function(e) {
+        self.move.call(self, e.move);
+      });
+
+    this.$element
+      .off('ttt.api.reset')
+      .on('ttt.api.reset', function() {
+        self.reset.call(self);
+      });
 
     if (this.options.autostart) {
       this.reset();
