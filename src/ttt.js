@@ -306,6 +306,8 @@
 
   $.extend(HumanPlayer.prototype, Player.prototype);
 
+  HumanPlayer.type = 'human';
+
 
   /* ========================================================================
    * AIPlayer
@@ -317,6 +319,8 @@
   };
 
   $.extend(AIPlayer.prototype, Player.prototype);
+
+  AIPlayer.type = 'ai';
 
   AIPlayer.prototype.constructor = AIPlayer;
 
