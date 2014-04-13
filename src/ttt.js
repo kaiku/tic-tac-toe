@@ -62,8 +62,10 @@
 
     // Initialize the players.
     for (var piece in this.players) {
-      this.players[piece].setPiece(piece);
-      this.players[piece].setManager(this);
+      if (this.players.hasOwnProperty(piece)) {
+        this.players[piece].setPiece(piece);
+        this.players[piece].setManager(this);
+      }
     }
 
     // Tell the first player to move.
@@ -163,7 +165,7 @@
       return indexes;
     }
 
-    for (var i in this.board) {
+    for (var i = 0; i < this.board.length; i++) {
       if (this.board[i] === null) indexes.push(parseInt(i));
     }
     return indexes;
@@ -175,7 +177,7 @@
   Board.prototype.isWin = function(piece) {
     var rows = Board.ROWS;
 
-    for (var i in rows) {
+    for (var i = 0; i < rows.length; i++) {
       if (
         this.board[rows[i][0]] === piece &&
         this.board[rows[i][1]] === piece &&
@@ -257,7 +259,7 @@
 
     output.push('   +-----------+ ');
 
-    for (var k in output) {
+    for (var k = 0; k < output.length; k++) {
       console.log(output[k]);
     }
   };
