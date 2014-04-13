@@ -1,3 +1,11 @@
+if (typeof Object.create !== 'function') {
+  Object.create = function (o) {
+    function F() {}
+    F.prototype = o;
+    return new F();
+  };
+}
+
 (function($) {
   'use strict';
 
@@ -300,11 +308,9 @@
    * ======================================================================== */
 
 
-  HumanPlayer = function() {
-    Player.call(this);
-  };
+  HumanPlayer = function() {};
 
-  $.extend(HumanPlayer.prototype, Player.prototype);
+  HumanPlayer.prototype = Object.create(Player.prototype);
 
   HumanPlayer.prototype.constructor = HumanPlayer;
 
@@ -321,7 +327,7 @@
     this.options = $.extend({}, AIPlayer.DEFAULTS, options);
   };
 
-  $.extend(AIPlayer.prototype, Player.prototype);
+  AIPlayer.prototype = Object.create(Player.prototype);
 
   AIPlayer.DEFAULTS = {
     moveDelay: 0
