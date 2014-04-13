@@ -306,6 +306,8 @@
 
   $.extend(HumanPlayer.prototype, Player.prototype);
 
+  HumanPlayer.prototype.constructor = HumanPlayer;
+
   HumanPlayer.type = 'human';
 
 
@@ -432,7 +434,7 @@
     }
 
     if (maximizing) { // This AI
-      for (i in moves) {
+      for (i = 0; i < moves.length; i++) {
         // Copy the current board and push a move on it.
         childBoard = board.clone();
         childBoard.move(this.piece, moves[i]);
@@ -449,7 +451,7 @@
         if (alpha >= beta) break;
       }
     } else { // Opponent
-      for (i in moves) {
+      for (i = 0; i < moves.length; i++) {
         childBoard = board.clone();
         childBoard.move(this.opponentPiece, moves[i]);
 
